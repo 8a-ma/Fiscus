@@ -3,7 +3,7 @@ import logging
 from flask import Flask, Response
 from flask_wtf import CSRFProtect
 from src.config.config import Config
-
+from src.services.factory import services
 
 app = Flask(__name__)
 csrf = CSRFProtect()
@@ -12,6 +12,8 @@ logger = Config.get_logger(__name__) or logging.getLogger()
 app.config.update(
     SECRET_KEY=secrets.token_hex(64)
 )
+
+services.init_app(logger)
 
 @app.get('/health')
 def health():

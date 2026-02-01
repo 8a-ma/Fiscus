@@ -23,9 +23,16 @@ else:
 
 class Config:
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
-    THREAD_MAX_WORKERS = int(os.getenv("THREAD_MAX_WORKERS", 4))
+
     POSTGRESQL_POOL_MIN = 1
-    POSTGRESQL_POOL_MAX = min(THREAD_MAX_WORKERS, 4)
+    POSTGRESQL_POOL_MAX = 4
+
+    POSTGERSQL_HOST = os.getenv("POSTGERSQL_HOST")
+    POSTGERSQL_DB = os.getenv("POSTGERSQL_DB")
+    POSTGERSQL_USER = os.getenv("POSTGERSQL_USER")
+    POSTGERSQL_PASSWORD = os.getenv("POSTGERSQL_PASSWORD")
+    POSTGERSQL_PORT = os.getenv("POSTGERSQL_PORT")
+    POSTGERSQL_QUERY_TIMEOUT = 10
 
     # src path
     ROOT_PATH = Path(__file__).resolve().parents[1]
