@@ -8,7 +8,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 # Copia el archivo de requerimientos al contenedor
-COPY requirements.txt ./
+COPY requirements.txt .
 
 # Instala las dependencias de Python como lo hacías originalmente
 RUN pip install --no-cache-dir -r requirements.txt
