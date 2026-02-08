@@ -1,3 +1,4 @@
 Biblia.md
 .env
 api/venv/**
+**/__pycache__/**
