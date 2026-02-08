@@ -12,12 +12,10 @@ def _resolve_log_level(level_name: str) -> int:
     return getattr(logging, level_name, logging.INFO)
 
 
-# Carga .env desde la raíz del repo si existe
 ROOT_ENV = Path(__file__).resolve().parents[2] / ".env"
 if ROOT_ENV.exists():
     load_dotenv(dotenv_path=ROOT_ENV)
 else:
-    # Fallback: intenta cargar desde CWD
     load_dotenv()
 
 
@@ -36,6 +34,8 @@ class Config:
 
     # src path
     ROOT_PATH = Path(__file__).resolve().parents[1]
+
+    API_KEY = os.getenv("API_KEY")
 
     @classmethod
     def get_logger(cls, name: str) -> logging.Logger:

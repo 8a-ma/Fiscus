@@ -1,5 +1,6 @@
 import logging
 from config.config import Config
+from decorators.Api_key import RequireAPIKey
 from persistence.Postgresql import PostgresqlDatabase
 
 class ServicesFactory:
@@ -26,5 +27,12 @@ class ServicesFactory:
             )
 
         return self._services.get('db')
+
+    @property
+    def api_key_validator(self):
+        if 'api_key_validator' not in self._services:
+            self._services['api_key_validator'] = RequireAPIKey(Config.API_KEY)
+
+        return self._services.get('api_key_validator')
 
 services = ServicesFactory()

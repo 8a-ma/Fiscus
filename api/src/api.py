@@ -14,6 +14,7 @@ app.config.update(
 services.init_app(logger)
 
 @app.get('/health')
+@services.api_key_validator
 def health():
     return Response(status=204)
 
