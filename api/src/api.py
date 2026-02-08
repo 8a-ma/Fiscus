@@ -1,8 +1,8 @@
 import secrets
 import logging
 from flask import Flask, Response
-from src.config.config import Config
-from src.services.factory import services
+from config.config import Config
+from services.factory import services
 
 app = Flask(__name__)
 logger = Config.get_logger(__name__) or logging.getLogger()
