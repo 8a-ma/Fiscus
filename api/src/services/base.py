@@ -10,7 +10,6 @@ class BaseServicesAbstract(ABC):
         self.start_time = None
         self.logger = logger
 
-
     @abstractmethod
     def handle_request(self) -> Response | Calleable:
         pass

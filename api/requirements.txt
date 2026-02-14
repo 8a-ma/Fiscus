@@ -3,10 +3,14 @@ click==8.3.1
 dotenv==0.9.9
 Flask==3.1.2
 Flask-WTF==1.2.2
+gevent==25.9.1
+greenlet==3.3.1
+gunicorn==25.1.0
 itsdangerous==2.2.0
 Jinja2==3.1.6
 MarkupSafe==3.0.3
 numpy==2.4.2
+packaging==26.0
 pandas==3.0.0
 psycopg2-binary==2.9.11
 python-dateutil==2.9.0.post0
@@ -15,3 +19,5 @@ six==1.17.0
 typing==3.7.4.3
 Werkzeug==3.1.5
 WTForms==3.2.1
+zope.event==6.1
+zope.interface==8.2

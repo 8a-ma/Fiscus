@@ -2,6 +2,7 @@ import time
 import logging
 import pandas as pd
 import psycopg2.pool
+from typing import Any
 from os import path, listdir
 from datetime import datetime
 from psycopg2.extras import execute_batch
@@ -30,7 +31,6 @@ class PostgresqlDatabase:
         self.user = postgre_user
         self.password = postgre_password
         self.port = postgre_port
-        self.executor = executor
         self.root_path = root_path
         self.query_timeout = query_timeout
         self.minconn = min(num_conn)
@@ -47,9 +47,10 @@ class PostgresqlDatabase:
             port=self.port,
         )
 
-    def _read_sql(self, folder: str, filename: str) -> str:
+    def read_sql_file(self, folder: str, filename: str) -> str:
         try:
-            full_path = path.join(self.root_path, 'persistence', 'sql', folder, filename)
+            full_path = path.join(self.root_path, 'services',folder, 'sql', filename)
+            print(full_path)
 
             with open(full_path, 'r', encoding='utf-8') as f:
                 sql_query = f.read()
@@ -165,18 +166,10 @@ class PostgresqlDatabase:
         finally:
             if conn: self.pool.putconn(conn)
 
-    def _simple_query(self, query_params: tuple, filepath: str, step: str):
+    def simple_query(self, step: str, query: str, query_params: tuple | dict | None = None) -> pd.DataFrame:
         self.start_time = time.time()
-        file = filepath.split("/")
-        filename = file[1]
 
         try:
-            query = self._read_sql(file[0], file[1])
-
-            if query is None:
-                self._log_info(f"Execute {step}, {filename} don't exist")
-                return None
-
             response = self._execute_simple_query(query, query_params=query_params)
             self._log_info(f"Execute simple query {step}")
 
@@ -186,39 +179,23 @@ class PostgresqlDatabase:
             self._log_exception(f"Execute simple query {step}", e)
             raise
 
-    def _fetchone_query(self, query_params: tuple, filepath: str, step: str):
+    def fetchone_query(self, step: str, query: str, query_params: tuple | dict | None = None) -> Any:
         self.start_time = time.time()
-        file = filepath.split("/")
-        filename = file[1]
 
         try:
-            query = self._read_sql(file[0], file[1])
-
-            if query is None:
-                self._log_info(f"Execute {step}, {filename} don't exist")
-                return None
-
             response = self._execute_fetchone(query, query_params=query_params)
-            self._log_info(f"Execute {step}")
+            self._log_info(f"Execute fetchone {step}")
 
             return response
 
         except Exception as e:
-            self._log_exception(f"Execute {step}", e)
+            self._log_exception(f"Execute fetchone {step}", e)
             raise
 
-    def _insert_query(self, query_params: tuple, filepath: str, step: str):
+    def insert_query(self, step: str, query: str, query_params: tuple | dict | list) -> Any:
         self.start_time = time.time()
-        file = filepath.split("/")
-        filename = file[1]
 
         try:
-            query = self._read_sql(file[0], file[1])
-
-            if query is None:
-                self._log_info(f"Execute insert query {step}, {filename} don't exist")
-                return None
-
             response = self._execute_insert_query(query, query_params=query_params)
             self._log_info(f"Execute insert query {step}")
             return response
@@ -227,26 +204,26 @@ class PostgresqlDatabase:
             self._log_exception(f"Execute insert query {step}", e)
             raise
 
-    def _insert_query_many_values(self, query_params: list, filepath: str, step: str):
-        self.start_time = time.time()
-        file = filepath.split("/")
-        filename = file[1]
-
-        try:
-            query = self._read_sql(file[0], file[1])
-
-            if query is None:
-                self._log_info(f"Execute insert query many {step}, {filename} doesn't exist")
-                return None
-
-            response = self._execute_insert_query_many(query, query_params=query_params)
-
-            self._log_info(f"Execute insert query many {step} - Rows: {len(query_params)}")
-            return response
-
-        except Exception as e:
-            self._log_exception(f"Execute insert query many {step} failed", e)
-            raise
+    # def _insert_query_many_values(self, query: str, query_params: tuple | dict |, step: str) -> Any:
+    #     self.start_time = time.time()
+    #     file = filepath.split("/")
+    #     filename = file[1]
+    #
+    #     try:
+    #         query = self._read_sql(file[0], file[1])
+    #
+    #         if query is None:
+    #             self._log_info(f"Execute insert query many {step}, {filename} doesn't exist")
+    #             return None
+    #
+    #         response = self._execute_insert_query_many(query, query_params=query_params)
+    #
+    #         self._log_info(f"Execute insert query many {step} - Rows: {len(query_params)}")
+    #         return response
+    #
+    #     except Exception as e:
+    #         self._log_exception(f"Execute insert query many {step} failed", e)
+    #         raise
 
     def _log_info(self, step: str):
         duration = time.time() - self.start_time
