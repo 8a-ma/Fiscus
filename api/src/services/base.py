@@ -2,16 +2,18 @@ import time
 import logging
 from flask import request, Response
 from abc import ABC, abstractmethod
-from typing import Calleable
+from typing import Callable
 
 
 class BaseServicesAbstract(ABC):
     def __init__(self, logger: logging.Logger):
-        self.start_time = None
         self.logger = logger
 
+        self.raw_data = None
+        self.start_time = None
+
     @abstractmethod
-    def handle_request(self) -> Response | Calleable:
+    def handle_request(self) -> Response | Callable:
         pass
 
     def _log_info(self, step: str):

@@ -50,7 +50,6 @@ class PostgresqlDatabase:
     def read_sql_file(self, folder: str, filename: str) -> str:
         try:
             full_path = path.join(self.root_path, 'services',folder, 'sql', filename)
-            print(full_path)
 
             with open(full_path, 'r', encoding='utf-8') as f:
                 sql_query = f.read()

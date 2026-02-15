@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS categories (
     name VARCHAR(50) NOT NULL,
     type VARCHAR(20) NOT NULL,
     is_cumulative BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (name, type)
 );
 
 -- 2. Tabla de Presupuestos (Budgets)
