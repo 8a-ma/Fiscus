@@ -13,7 +13,7 @@ def get_all_categories():
     return Response(json.dumps(s.get_all_categories()), status=200, mimetype='application/json')
 
 
-@categories_bp.post("/created")
+@categories_bp.post("/create")
 @RequiredKeys(body={'name', 'type', 'is_cumulative'})
 def create_new_categorie():
     handle = s.CreateCategorie(logger=services.logger)
