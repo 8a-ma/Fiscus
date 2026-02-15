@@ -18,7 +18,7 @@ class CreateCategorie(BaseServicesAbstract):
 
             id = c.create_new_categorie(tuple(name, type, is_cumulative))
 
-            if (id, pd.DataFrame):
+            if isinstance(id, pd.DataFrame):
                 id = id['id'].iloc[0]
 
             response = {
