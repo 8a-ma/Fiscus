@@ -4,6 +4,7 @@ from flask import Flask, Response
 from config.config import Config
 from services.factory import services
 from services.categories.route import categories_bp
+from services.transactions.route import transactions_bp
 
 app = Flask(__name__)
 logger = Config.get_logger(__name__) or logging.getLogger()
@@ -20,6 +21,7 @@ def health():
     return Response(status=204)
 
 app.register_blueprint(categories_bp)
+app.register_blueprint(transactions_bp)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
