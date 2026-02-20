@@ -7,6 +7,39 @@ from services.base import BaseServicesAbstract
 from services.categories.service import get_all_categories
 
 
+class GetTransactions(BaseServicesAbstract):
+    def handle_request(self) -> Response:
+        try:
+            params = request.args.to_dict()
+            filters = {
+                "category_id": params.get('category_id'),
+                "month": params.get('month'),
+                "year": params.get('year'),
+                "limit": int(params.get('limit', 20)),
+                "offest": int(params.get('offest', 0)),
+                "sort_by": params.get("sort_by", "created_at"),
+                "order": params.get('order', 'DESC')
+            }
+
+            df = c.get_transactions_filtered(filters)
+
+            response = {
+                "data": df.to_dict(orient='records')
+            }
+            status_code = 200
+
+        except Exception as e:
+            response = {"error": "Internal Server Error", "message": str(e)}
+            status_code = 500
+
+        finally:
+            return Response(
+                json.dumps(response),
+                status=status_code,
+                mimetype='application/json'
+            )
+
+
 class CreateTransaction(BaseServicesAbstract):
     def _verify_category_id(category_id: int) -> bool:
         categories_ids = get_all_categories()

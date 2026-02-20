@@ -10,7 +10,8 @@ transactions_bp = Blueprint('transactions', __name__, url_prefix='/v1/transactio
 
 @transactions_bp.get("")
 def list_transactions():
-    return Response(status=204)
+    handle = s.GetTransactions(logger=services.logger)
+    return handle.handle_request()
 
 
 @transactions_bp.post("/create")
