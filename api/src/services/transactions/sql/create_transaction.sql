@@ -1,7 +1,7 @@
 insert into public.transactions (
   category_id,
-  monto,
-  descripcion,
+  amount,
+  description,
 )
 values (
   %s,
