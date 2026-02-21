@@ -10,6 +10,12 @@ def get_all_categories() -> dict:
     return c.get_all_categories().to_dict(orient='index',)
 
 
+def verify_category_id(category_id: int) -> bool:
+    categories_ids = get_all_categories()
+
+    return any(cat.get('id') == category_id for cat in categories_ids.values())
+
+
 class CreateCategorie(BaseServicesAbstract):
     def handle_request(self) -> Response:
         try:

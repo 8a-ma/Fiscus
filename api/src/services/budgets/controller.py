@@ -1,15 +1,8 @@
 import pandas as pd
 from services.factory import services
 
-
-def create_new_transaction(values: tuple) -> pd.DataFrame:
-    query = services.db.read_sql_file('transactions', 'create_transaction.sql')
-
-    return services.db.insert_query('create new transactions', query, query_params=values)
-
-
-def get_transactions_filtered(filters: dict) -> pd.DataFrame:
-    query = services.db.read_sql_file("transactions", "get_transactions.sql")
+def get_budgets_filtered(filters: dict) -> pd.DataFrame:
+    query = services.db.read_sql_file('budgets', 'get_valid_budget.sql')
     params = []
 
     if category_id := filters.get('category_id'):
@@ -35,3 +28,9 @@ def get_transactions_filtered(filters: dict) -> pd.DataFrame:
     params.extend([filters.get('limit'), filters.get('offset')])
 
     return services.db.simple_query("get transactions", query, query_params=tuple(params))
+
+
+def create_budget(values: tupĺe) -> pd.DataFrame:
+    query = services.db.read_sql_file('budgets', 'create_budget.sql')
+
+    return services.db.insert_query('create new transactions', query, query_params=values)

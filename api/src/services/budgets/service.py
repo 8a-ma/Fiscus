@@ -7,7 +7,7 @@ from services.base import BaseServicesAbstract
 from services.categories.service import verify_category_id
 
 
-class GetTransactions(BaseServicesAbstract):
+class GetBudgets(BaseServicesAbstract):
     def handle_request(self) -> Response:
         try:
             params = request.args.to_dict()
@@ -21,7 +21,7 @@ class GetTransactions(BaseServicesAbstract):
                 "order": params.get('order', 'DESC')
             }
 
-            df = c.get_transactions_filtered(filters)
+            df = c.get_budgets_filtered(filters)
 
             response = {
                 "data": df.to_dict(orient='records')
@@ -40,14 +40,13 @@ class GetTransactions(BaseServicesAbstract):
             )
 
 
-class CreateTransaction(BaseServicesAbstract):
+class CreateBudget(BaseServicesAbstract):
     def handle_request(self) -> Response:
         try:
             self.raw_data = request.get_json() or {}
 
             category_id = self.raw_data.get('category_id')
             amount = self.raw_data.get('amount')
-            description = self.raw_data.get('description')
 
             if not category_id or not amount:
                 raise ValueError("Category id and amount are required fields")
@@ -55,7 +54,7 @@ class CreateTransaction(BaseServicesAbstract):
             if verify_category_id(category_id):
                 raise ValueError(f"Category id ({category_id}) not exist")
 
-            result = c.create_transaction((category_id, amount, description))
+            result = c.create_budget(tuple(category_id, amount,))
 
             if isinstance(result, pd.DataFrame):
                 if not result.empty:
@@ -67,7 +66,7 @@ class CreateTransaction(BaseServicesAbstract):
             else:
                 id = result
 
-            response = {"id": int(id)}
+            response = {"id": int(new_id)}
             status_code = 201
 
         except ValueError as e:
@@ -80,7 +79,37 @@ class CreateTransaction(BaseServicesAbstract):
 
         finally:
             return Response(
-                json.dumps(response),
+                json.loads(response),
                 status=status_code,
                 mimetype='application/json'
             )
+
+
+class UpdateBudget(BaseServicesAbstract):
+    def handle_request(self) -> Response:
+        try:
+            pass
+
+        except ValueError as e:
+            pass
+
+        except Exception as e:
+            pass
+
+        finally:
+            pass
+
+
+class DeleteBudget(BaseServicesAbstract):
+    def handle_request(self) -> Response:
+        try:
+            pass
+
+        except ValueError as e:
+            pass
+
+        except Exception as e:
+            pass
+
+        finally:
+            pass
