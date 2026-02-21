@@ -17,4 +17,4 @@ def get_all_categories():
 @RequiredKeys(body={'name', 'type', 'is_cumulative'})
 def create_new_categorie():
     handle = s.CreateCategorie(logger=services.logger)
-    return handle.handle_request()
+    return handle.execute()

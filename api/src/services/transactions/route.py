@@ -11,11 +11,11 @@ transactions_bp = Blueprint('transactions', __name__, url_prefix='/v1/transactio
 @transactions_bp.get("")
 def list_transactions():
     handle = s.GetTransactions(logger=services.logger)
-    return handle.handle_request()
+    return handle.execute()
 
 
 @transactions_bp.post("/create")
 @RequiredKeys(body={"category_id", "amount"})
 def create_transaction():
     handle = s.CreateTransaction(logger=services.logger)
-    return handle.handle_request()
+    return handle.execute()
