@@ -13,7 +13,7 @@ class BaseServicesAbstract(ABC):
         self.start_time = None
 
     @abstractmethod
-    def handle_request(self) -> Response | Callable:
+    def handle_request(self) -> Response:
         pass
 
     def _log_info(self, step: str):

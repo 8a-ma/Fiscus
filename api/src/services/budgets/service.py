@@ -88,16 +88,34 @@ class CreateBudget(BaseServicesAbstract):
 class UpdateBudget(BaseServicesAbstract):
     def handle_request(self) -> Response:
         try:
-            pass
+            self.raw_data = request.get_json() or {}
+
+            id = self.raw_data.get('id')
+            category_id = self.raw_data.get('category_id')
+            amount = self.raw_data.get('amount')
+
+            if not category_id or not amount:
+                raise ValueError("Category id and amount are required fields")
+
+            if verify_category_id(category_id):
+                raise ValueError(f"Category id ({category_id}) not exist")
+
+            result = ...
 
         except ValueError as e:
-            pass
+            response = {"error": "Bad Request", "message": str(e)}
+            status_code = 400
 
         except Exception as e:
-            pass
+            response = {"error": "Internal Server Error", "message": str(e)}
+            status_code = 500
 
         finally:
-            pass
+            return Response(
+                json.loads(response),
+                status=status_code,
+                mimetype='application/json'
+            )
 
 
 class DeleteBudget(BaseServicesAbstract):
