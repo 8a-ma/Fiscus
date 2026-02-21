@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS categories (
     name VARCHAR(50) NOT NULL,
     type VARCHAR(20) NOT NULL,
     is_cumulative BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP AT TIME ZONE 'UTC',
+    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
     UNIQUE (name, type)
 );
 
@@ -17,9 +17,8 @@ CREATE TABLE IF NOT EXISTS budgets (
     id SERIAL PRIMARY KEY,
     category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
     amount DECIMAL(15, 2) DEFAULT 0.00,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP AT TIME ZONE 'UTC',
-    deleted_at TIMESTAMP,
-    UNIQUE (id, category_id, created_at)
+    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+    deleted_at TIMESTAMP
 );
 
 -- 3. Tabla de Transacciones (La realidad)
@@ -28,7 +27,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
     amount DECIMAL(15, 2) NOT NULL,
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
+    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
 );
 
 -- 4. Tabla de Balances Mensuales (MonthlyBalances)
@@ -38,6 +37,6 @@ CREATE TABLE IF NOT EXISTS monthly_balances (
     category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
     start_balance DECIMAL(15, 2) DEFAULT 0.00, -- Lo que sobró del mes anterior
     final_balance DECIMAL(15, 2) DEFAULT 0.00,   -- (Inicial + Presupuesto - Gastos)
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP AT TIME ZONE 'UTC',
+    created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
     UNIQUE (id, category_id)
 );
