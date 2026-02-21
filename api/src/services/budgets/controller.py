@@ -34,3 +34,8 @@ def create_budget(values: tupĺe) -> pd.DataFrame:
     query = services.db.read_sql_file('budgets', 'create_budget.sql')
 
     return services.db.insert_query('create new transactions', query, query_params=values)
+
+def update_budget(values: tupĺe) -> pd.DataFrame:
+    query = services.db.read_sql_file('budgets', 'update_budget.sql')
+
+    return services.db.insert_query('update transaction', query, query_params=values)

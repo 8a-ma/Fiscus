@@ -32,6 +32,7 @@ class GetBudgets(BaseEndpointAbstract):
 
         return response, status_code
 
+
 class CreateBudget(BaseEndpointAbstract):
     def handle_request(self) -> tuple[dict, int]:
         self.raw_data = request.get_json() or {}
@@ -62,6 +63,7 @@ class CreateBudget(BaseEndpointAbstract):
 
         return response, status_code
 
+
 class UpdateBudget(BaseServicesAbstract):
     def handle_request(self) -> tuple[dict, int]:
         self.raw_data = request.get_json() or {}
@@ -76,9 +78,19 @@ class UpdateBudget(BaseServicesAbstract):
         if verify_category_id(category_id):
             raise ValueError(f"Category id ({category_id}) not exist")
 
-        result = ...
+        result = c.update_budget(tuple(id, category_id, amount,))
 
-        response = ...
+        if isinstance(result, pd.DataFrame):
+            if not result.empty:
+                id = result['id'].iloc[0]
+
+            else:
+                raise Exception("No ID returned from database")
+
+        else
+            id = result
+
+        response = {"id": int(id)}
         status_code = 200
 
         return response, status_code
