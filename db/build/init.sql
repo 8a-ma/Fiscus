@@ -17,8 +17,9 @@ CREATE TABLE IF NOT EXISTS budgets (
     id SERIAL PRIMARY KEY,
     category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
     amount DECIMAL(15, 2) DEFAULT 0.00,
-    budget_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP AT TIME ZONE 'UTC',
-    UNIQUE (id, category_id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP AT TIME ZONE 'UTC',
+    closed_at TIMESTAMP,
+    UNIQUE (id, category_id, created_at)
 );
 
 -- 3. Tabla de Transacciones (La realidad)
