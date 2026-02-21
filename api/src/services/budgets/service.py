@@ -97,5 +97,23 @@ class UpdateBudget(BaseServicesAbstract):
 
 
 class DeleteBudget(BaseServicesAbstract):
+    def _verify_budget(self, id: int) -> bool:
+        return any(budget.get('id') == id for budget in c.get_budgets_filtered().values())
+
     def handle_request(self) -> tuple[dict, int]:
-        pass
+        self.raw_data = request.get_json() or {}
+
+        id = self.raw_data.get('id')
+
+        if not id:
+            raise ValueError("No ID identify")
+
+        if not self._verify_budget(id):
+            raise Exception("No ID on database")
+
+        c.delete_budget((id, ))
+
+        response = {"id": id}
+        status_code = 200
+
+        return response, status_code

@@ -1,7 +1,8 @@
 import pandas as pd
 from services.factory import services
 
-def get_budgets_filtered(filters: dict) -> pd.DataFrame:
+
+def get_budgets_filtered(filters: dict | None) -> pd.DataFrame:
     query = services.db.read_sql_file('budgets', 'get_valid_budget.sql')
     params = []
 
@@ -20,12 +21,19 @@ def get_budgets_filtered(filters: dict) -> pd.DataFrame:
     allowed_columns = ["created_at", "amount", "category_id"]
     sort_columns = sort_by if sort_by := filters.get('sort_by') in allowed_columns else "created_at"
 
-    order_by = "DESC" if f["order"].upper() == "DESC" else "ASC"
+    order_by = "DESC" if filters["order"].upper() == "DESC" else "ASC"
 
     query += f" order by {sort_columns} {order_by}"
 
-    query += " limit %s offset %s;"
-    params.extend([filters.get('limit'), filters.get('offset')])
+    if limit := filters.get('limit'):
+        query += " limit %s"
+        params.append(limit)
+
+    if offset := filters.get('offset'):
+        query += " offset %s"
+        params.append(offset)
+
+    query += ";"
 
     return services.db.simple_query("get transactions", query, query_params=tuple(params))
 
@@ -33,9 +41,18 @@ def get_budgets_filtered(filters: dict) -> pd.DataFrame:
 def create_budget(values: tupĺe) -> pd.DataFrame:
     query = services.db.read_sql_file('budgets', 'create_budget.sql')
 
-    return services.db.insert_query('create new transactions', query, query_params=values)
+    return services.db.insert_query('create new budget', query, query_params=values)
+
+
+def delete_budget(values: tuple) -> None:
+    query = services.db.read_sql_file('budgets', 'delete_budget.sql')
+
+    services.db.insert_query('delete budget', query query_params=values)
+
 
 def update_budget(values: tupĺe) -> pd.DataFrame:
+    delete_budget((values[0],))
+
     query = services.db.read_sql_file('budgets', 'update_budget.sql')
 
-    return services.db.insert_query('update transaction', query, query_params=values)
+    return services.db.insert_query('update budget', query, query_params=tuple(values[1:]))

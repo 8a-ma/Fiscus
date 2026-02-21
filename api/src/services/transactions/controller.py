@@ -31,7 +31,14 @@ def get_transactions_filtered(filters: dict) -> pd.DataFrame:
 
     query += f" order by {sort_columns} {order_by}"
 
-    query += " limit %s offset %s;"
-    params.extend([filters.get('limit'), filters.get('offset')])
+    if limit := filters.get('limit'):
+        query += " limit %s"
+        params.append(limit)
+
+    if offset := filters.get('offset'):
+        query += " offset %s"
+        params.append(offset)
+
+    query += ";"
 
     return services.db.simple_query("get transactions", query, query_params=tuple(params))
